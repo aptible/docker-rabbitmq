@@ -38,6 +38,35 @@ if [[ "$1" == "--initialize" ]]; then
     echo "Waiting for RabbitMQ to exit..."
     pkill -TERM -P "$rmq_pid"
     wait "$rmq_pid" || true
+elif [[ "$1" == "--discover" ]]; then
+  cat <<EOM
+{
+  "configuration": {
+    "USERNAME": "aptible",
+    "DATABASE": "db",
+    "PASSPHRASE": "$(pwgen -s 32)"
+  }
+}
+EOM
+elif [[ "$1" == "--connection-url" ]]; then
+  cat <<EOM
+{
+  "urls": [
+    {
+        "type": "amqps",
+        "default": true,
+        "internal_port": 5671,
+        "url": "amqps://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_5671}/${DATABASE}"
+    },
+    {
+        "type": "management",
+        "default": false,
+        "internal_port": 15671,
+        "url": "https://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_15671}/${DATABASE}"
+    }
+  ]
+}
+EOM
 elif [[ "$1" == "--client" ]]; then
     echo "This image does not support the --client option. Use rabbitmqadmin instead." && exit 1
 else

@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 wait_for_rabbitmq() {
-  for _ in $(seq 1 25); do
+  for _ in $(seq 1 60); do
     if rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues >/dev/null 2>&1; then
       return 0
     fi
@@ -14,14 +14,14 @@ wait_for_rabbitmq() {
 wait_until_epmd_exits() {
   # Force shutdown the Erlang application server, regardless of whether it was
   # started.
-  for _ in $(seq 1 25); do
+  for _ in $(seq 1 60); do
     if epmd -kill 2>&1 | grep -qi "killed"; then
       return 0
     fi
     sleep 1
   done
 
-  echo "epmd did not come exit!"
+  echo "epmd did not exit!"
   return 1
 }
 
