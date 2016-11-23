@@ -41,6 +41,7 @@ if [[ "$1" == "--initialize" ]]; then
 elif [[ "$1" == "--discover" ]]; then
   cat <<EOM
 {
+  "version": "1.0",
   "configuration": {
     "USERNAME": "aptible",
     "DATABASE": "db",
@@ -51,17 +52,16 @@ EOM
 elif [[ "$1" == "--connection-url" ]]; then
   cat <<EOM
 {
+  "version": "1.0",
   "urls": [
     {
         "type": "amqps",
         "default": true,
-        "internal_port": 5671,
         "url": "amqps://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_5671}/${DATABASE}"
     },
     {
         "type": "management",
         "default": false,
-        "internal_port": 15671,
         "url": "https://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_15671}/${DATABASE}"
     }
   ]
