@@ -62,7 +62,7 @@ elif [[ "$1" == "--connection-url" ]]; then
     {
         "type": "management",
         "default": false,
-        "url": "https://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_15671}/${DATABASE}"
+        "url": "https://${USERNAME}:${PASSPHRASE}@${EXPOSE_HOST}:${EXPOSE_PORT_15671}/api/vhosts/${DATABASE}"
     }
   ]
 }
