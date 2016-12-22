@@ -37,7 +37,6 @@ RUN         ln -s /var/db/testca/cacert.pem /ssl/cacert.pem && \
 ADD         test /tmp/test
 RUN         bats --tap /tmp/test && apk del --purge python
 
-# TODO: EXPOSE 15671 as well when Sweetness supports exposing multiple ports
-EXPOSE      5671
+EXPOSE      5671 15671
 VOLUME      ["$DATA_DIRECTORY"]
 ENTRYPOINT  ["/usr/bin/wrapper"]
