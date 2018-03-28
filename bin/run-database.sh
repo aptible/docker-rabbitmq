@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o errexit
 
+SSL_DIR=/ssl
+
 with_retry () {
   # When RabbitMQ is just booting up, it might be impossible to e.g. create a
   # new user because no worker is available to service our request (the error
@@ -80,18 +82,37 @@ add_vhost_if_not_exists () {
   return 1
 }
 
+bootstrap_configuration () {
+  local bindHost="$1";
+
+  local baseConfig
+  baseConfig="$(mktemp)"
+
+  # shellcheck disable=SC2002
+  cat "/etc/rabbitmq.config.template" \
+    | sed "s:__SSL_DIR__:${SSL_DIR}:g" \
+    | sed "s:__BIND_HOST__:${bindHost}:g"\
+    > "${baseConfig}"
+
+  # RabbitMQ wants us to have a .config at the end of the filename.
+  mv "$baseConfig" "${baseConfig}.config"
+
+  export RABBITMQ_CONFIG_FILE="$baseConfig"
+}
+
 if [[ "$1" == "--initialize" ]]; then
     /usr/bin/initialize-certs
+    bootstrap_configuration "127.0.0.1"
 
     rabbitmq-server &
     rmq_pid="$!"
 
     with_retry add_user_if_not_exists "$USERNAME" "$PASSPHRASE"
     with_retry add_vhost_if_not_exists "$DATABASE"
-    with_retry delete_user_if_exists guest
+    with_retry delete_user_if_exists "guest"
 
     with_retry rabbitmqctl set_permissions -p "$DATABASE" "$USERNAME" ".*" ".*" ".*"
-    with_retry rabbitmqctl set_user_tags "$USERNAME" administrator
+    with_retry rabbitmqctl set_user_tags "$USERNAME" "administrator"
 
     echo "Waiting for RabbitMQ to exit..."
     pkill -TERM -P "$rmq_pid"
@@ -133,6 +154,7 @@ EOM
 elif [[ "$1" == "--client" ]]; then
     echo "This image does not support the --client option. Use rabbitmqadmin instead." && exit 1
 else
+    bootstrap_configuration "0.0.0.0"
     /usr/bin/initialize-certs
     echo "Launching RabbitMQ..."
     exec rabbitmq-server

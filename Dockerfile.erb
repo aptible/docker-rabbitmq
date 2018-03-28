@@ -31,7 +31,7 @@ RUN         mkdir -p /srv && \
             mkdir "$DATA_DIRECTORY"
 
 COPY        etc/openssl.cnf /ssl/testca/openssl.cnf
-COPY        etc/rabbitmq.config "${RABBITMQ_HOME}/etc/rabbitmq/"
+COPY        etc/rabbitmq.config.template /etc/rabbitmq.config.template
 COPY        etc/rabbitmqadmin.conf /usr/local/bin/rabbitmqadmin.conf
 COPY        bin/run-database.sh /usr/bin/wrapper
 COPY        bin/initialize-certs.sh /usr/bin/initialize-certs
