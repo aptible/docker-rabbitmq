@@ -19,7 +19,7 @@ RUN         mkdir -p /srv && \
               -fsSL "https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v${RABBITMQ_VERSION//\./_}/${ARCHIVE}" \
               -o "$ARCHIVE" && \
             echo "${RABBITMQ_SHA1SUM}  ${ARCHIVE}" | sha1sum -c - && \
-            apk-install python erlang erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
+            apk-install erlang erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
                         erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap && \
             tar -xzvf "$ARCHIVE" && \
             rm -f "$ARCHIVE" && \
@@ -51,7 +51,6 @@ RUN         ln -s /var/db/testca/cacert.pem /ssl/cacert.pem && \
             ln -s /var/db/server/key.pem /ssl/key.pem
 
 ADD         test /tmp/test
-RUN         bats --tap /tmp/test && apk del --purge python
 
 EXPOSE      5671 15671
 VOLUME      ["$DATA_DIRECTORY"]

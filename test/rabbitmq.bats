@@ -1,86 +1,24 @@
 #!/usr/bin/env bats
-wait_for_rabbitmq() {
-  for _ in $(seq 1 60); do
-    if rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues >/dev/null 2>&1; then
-      return 0
-    fi
-    sleep 1
-  done
 
-  echo "RabbitMQ did not come online!"
-  return 1
-}
-
-wait_until_epmd_exits() {
-  # Force shutdown the Erlang application server, regardless of whether it was
-  # started.
-  for _ in $(seq 1 60); do
-    if epmd -kill 2>&1 | grep -qiE "(killed|cannot connect)"; then
-      return 0
-    fi
-    sleep 1
-  done
-
-  echo "epmd did not exit!"
-  return 1
-}
-
-initialize_rabbitmq() {
-  echo "test: initialize_rabbitmq..."
-  USERNAME=user PASSPHRASE=pass DATABASE=db /usr/bin/wrapper --initialize
-}
-
-run_rabbitmq() {
-  echo "test: run_rabbitmq..."
-  wrapper &
-  export SCRIPT_PID=$!
-  wait_for_rabbitmq
-}
-
-setup() {
-  unset SCRIPT_PID
-
-  export RABBITMQ_MNESIA_BASE=/tmp/datadir
-  rm -rf "$RABBITMQ_MNESIA_BASE"
-  mkdir -p "$RABBITMQ_MNESIA_BASE"
-}
-
-teardown() {
-# If RabbitMQ was started, shut it down
-  if [[ -n "$SCRIPT_PID" ]]; then
-    pkill -TERM -P "$SCRIPT_PID"
-    wait "$SCRIPT_PID"
-  fi
-  wait_until_epmd_exits
-
-  rm -rf /var/db/testca
-  rm -rf /var/db/server
-}
+source "${BATS_TEST_DIRNAME}/test_helpers.sh"
 
 @test "It should bring up a working RabbitMQ instance" {
-    initialize_rabbitmq
-    run_rabbitmq
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues vhost name
-    [ "$status" -eq "0" ]
+    start_rabbitmq
+    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues vhost name
 }
 
 @test "It should be able to declare an exchange" {
-    initialize_rabbitmq
-    run_rabbitmq
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare exchange name=my-new-exchange type=fanout
-    [ "$status" -eq "0" ]
+    start_rabbitmq
+    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare exchange name=my-new-exchange type=fanout
 }
 
 @test "It should be able to declare a queue" {
-    initialize_rabbitmq
-    run_rabbitmq
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare queue name=my-new-queue durable=false
-    [ "$status" -eq "0" ]
+    start_rabbitmq
+    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare queue name=my-new-queue durable=false
 }
 
 @test "It should be able to publish and retrieve a message" {
-    initialize_rabbitmq
-    run_rabbitmq
+    start_rabbitmq
     run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare exchange name=my-new-exchange type=fanout
     [ "$status" -eq "0" ]
     run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare queue name=my-new-queue durable=false
@@ -153,8 +91,7 @@ teardown() {
 }
 
 @test "It should delete the guest user and create a user" {
-    initialize_rabbitmq
-    run_rabbitmq
+    start_rabbitmq
     ! rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list users | grep -q guest
     rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list users | grep -q user
 }
