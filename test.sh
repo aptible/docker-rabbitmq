@@ -6,7 +6,9 @@ IMG="$REGISTRY/$REPOSITORY:$TAG"
 
 echo "Unit Tests..."
 docker run -it --rm --entrypoint "bash" "$IMG" \
-  -c "apk-install python >/dev/null && bats /tmp/test"
+  -c "apk add --update python >/dev/null && \
+      install-bats && \
+      bats /tmp/test"
 
 
 echo "#############"

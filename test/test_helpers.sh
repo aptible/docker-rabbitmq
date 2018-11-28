@@ -1,8 +1,20 @@
 #!/bin/bash
 
+rabbit_client(){
+  # Rabbitmqadmin 3.5 contains a patch to handle the self signed SSL, see here :
+  # https://github.com/aptible/docker-rabbitmq/commit/0fb8a57a3206a15e340ad9a33b6f93ef18cb2f49
+  # Rabbitmqadmin 3.7 has a flag that can handle this
+
+  if [[ "$TAG" == "3.5" ]]; then
+    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.7" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  fi
+}
+
 wait_for_rabbitmq() {
   for _ in $(seq 1 60); do
-    if rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues >/dev/null 2>&1; then
+    if rabbit_client list queues >/dev/null 2>&1; then
       return 0
     fi
     sleep 1
@@ -28,7 +40,7 @@ wait_until_epmd_exits() {
 
 initialize_rabbitmq() {
   echo "test: initialize_rabbitmq..."
-  USERNAME=user PASSPHRASE=pass DATABASE=db /usr/bin/wrapper --initialize
+  USERNAME=testuser PASSPHRASE=pass DATABASE=db /usr/bin/wrapper --initialize
 }
 
 run_rabbitmq() {

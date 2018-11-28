@@ -97,7 +97,12 @@ bootstrap_configuration () {
   # RabbitMQ wants us to have a .config at the end of the filename.
   mv "$baseConfig" "${baseConfig}.config"
 
-  export RABBITMQ_CONFIG_FILE="$baseConfig"
+  # Some RabbitMQ don't want the extension included in RABBITMQ_CONFIG_FILE.
+  if [[ "$RABBITMQ_VERSION" == "3.5.8" ]]; then
+    export RABBITMQ_CONFIG_FILE="${baseConfig}"
+  else
+    export RABBITMQ_CONFIG_FILE="${baseConfig}.config"
+  fi
 }
 
 if [[ "$1" == "--initialize" ]]; then
