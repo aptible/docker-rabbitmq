@@ -1,7 +1,7 @@
-FROM        quay.io/aptible/alpine:3.4
+FROM        alpine:3.8
 
-ENV         RABBITMQ_VERSION=<%= ENV.fetch 'RABBITMQ_VERSION' %> \
-            RABBITMQ_SHA1SUM=<%= ENV.fetch 'RABBITMQ_SHA1SUM' %> \
+ENV         TAG=<%= ENV.fetch 'TAG' %> \
+            RABBITMQ_VERSION=<%= ENV.fetch 'RABBITMQ_VERSION' %> \
             RABBITMQ_MNESIA_BASE=/var/db/rabbitmq \
             DATA_DIRECTORY=/var/db \
             RABBITMQ_LOGS=- \
@@ -13,43 +13,44 @@ ENV         PATH=$RABBITMQ_HOME/sbin:$PATH
 
 RUN         mkdir -p /srv && \
             cd /srv && \
-            ARCHIVE="rabbitmq-server-generic-unix-${RABBITMQ_VERSION}.tar.gz" && \
-            apk-install curl tar gzip bash openssl pwgen && \
+            ARCHIVE="rabbitmq.tar.<%= ENV.fetch 'ARCHIVE_FORMAT' %>" && \
+            apk add --no-cache --update curl tar gzip bash openssl pwgen && \
             curl \
-              -fsSL "https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v${RABBITMQ_VERSION//\./_}/${ARCHIVE}" \
-              -o "$ARCHIVE" && \
-            echo "${RABBITMQ_SHA1SUM}  ${ARCHIVE}" | sha1sum -c - && \
-            apk-install erlang erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
-                        erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap && \
-            tar -xzvf "$ARCHIVE" && \
-            rm -f "$ARCHIVE" && \
+              -fsSL "<%= ENV.fetch 'RABBITMQ_DOWNLOAD_URL' %>" \
+              -o "${ARCHIVE}" && \
+            echo "<%= ENV.fetch 'RABBITMQ_SHA1SUM' %>  ${ARCHIVE}" | sha1sum -c - && \
+            apk add --no-cache --update  erlang erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
+                        erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap xz bash && \
+            tar -xvf "$ARCHIVE" && \
+            rm -f "${ARCHIVE}" && \
             touch "${RABBITMQ_HOME}/etc/rabbitmq/enabled_plugins" && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_management && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_shovel && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_shovel_management && \
             apk del --purge tar gzip && \
-            mkdir "$DATA_DIRECTORY"
+            mkdir "${DATA_DIRECTORY}"
 
 COPY        etc/openssl.cnf /ssl/testca/openssl.cnf
 COPY        etc/rabbitmq.config.template /etc/rabbitmq.config.template
 COPY        etc/rabbitmqadmin.conf /usr/local/bin/rabbitmqadmin.conf
 COPY        bin/run-database.sh /usr/bin/wrapper
 COPY        bin/initialize-certs.sh /usr/bin/initialize-certs
-COPY        bin/rabbitmqadmin /usr/local/bin/rabbitmqadmin
+COPY        "${TAG}"/bin/rabbitmqadmin /usr/local/bin/rabbitmqadmin
 
 RUN         VERSION="<%= ENV.fetch 'DELAYED_MESSAGE_EXCHANGE_VERSION' %>" \
-         && SHA1SUM="<%= ENV.fetch 'DELAYED_MESSAGE_EXCHANGE_SHA1SUM' %>" \
          && PLUGINS="<%= ENV.fetch 'RABBITMQ_PLUGINS' %>" \
-         && ARCHIVE="rabbitmq_delayed_message_exchange-${VERSION}.ez" \
-         && curl -fsSL "http://www.rabbitmq.com/community-plugins/v${PLUGINS}/${ARCHIVE}" -o "$ARCHIVE" \
-         && echo "${SHA1SUM}  ${ARCHIVE}" | sha1sum -c - \
-         && mv "$ARCHIVE" "/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins/" \
+         && DOWNLOAD="rabbitmq_delayed_message_exchange-${VERSION}" \
+         && curl -fsSL "<%= ENV.fetch 'DELAYED_MESSAGE_PLUGIN_DOWNLOAD' %>" -o "$DOWNLOAD" \
+         && echo "<%= ENV.fetch 'DELAYED_MESSAGE_EXCHANGE_SHA1SUM' %>  ${DOWNLOAD}" | sha1sum -c - \
+         && (unzip "${DOWNLOAD}" || mv "${DOWNLOAD}" "${DOWNLOAD}.ez") \
+         && mv "${DOWNLOAD}.ez" "/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins/" \
          && rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
 
 RUN         ln -s /var/db/testca/cacert.pem /ssl/cacert.pem && \
             ln -s /var/db/server/cert.pem /ssl/cert.pem && \
             ln -s /var/db/server/key.pem /ssl/key.pem
 
+ADD         bin/install-bats.sh /usr/bin/install-bats
 ADD         test /tmp/test
 
 EXPOSE      5671 15671

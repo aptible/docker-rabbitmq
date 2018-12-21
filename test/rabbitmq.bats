@@ -4,29 +4,28 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
 
 @test "It should bring up a working RabbitMQ instance" {
     start_rabbitmq
-    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list queues vhost name
+    rabbit_client list queues vhost name
 }
 
 @test "It should be able to declare an exchange" {
     start_rabbitmq
-    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare exchange name=my-new-exchange type=fanout
+    rabbit_client declare exchange name=my-new-exchange type=fanout
 }
 
 @test "It should be able to declare a queue" {
     start_rabbitmq
-    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare queue name=my-new-queue durable=false
+    rabbit_client declare queue name=my-new-queue durable=false
 }
 
 @test "It should be able to publish and retrieve a message" {
     start_rabbitmq
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare exchange name=my-new-exchange type=fanout
-    [ "$status" -eq "0" ]
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf declare queue name=my-new-queue durable=false
-    [ "$status" -eq "0" ]
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf publish exchange=my-new-exchange routing_key=my-new-queue payload="hello, world"
-    [ "$status" -eq "0" ]
-    run rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf get queue=my-new-queue requeue=false
-    [ "$status" -eq "0" ]
+
+    rabbit_client declare exchange name=my-new-exchange type=fanout
+    rabbit_client declare queue name=my-new-queue durable=false
+    rabbit_client declare binding source="my-new-exchange" destination_type=queue destination="my-new-queue"
+
+    rabbit_client publish exchange=my-new-exchange routing_key=my-new-queue payload="hello, world"
+    rabbit_client get queue=my-new-queue | grep -q "hello, world"
 }
 
 @test "It should auto-generate certs when none are provided" {
@@ -92,6 +91,6 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
 
 @test "It should delete the guest user and create a user" {
     start_rabbitmq
-    ! rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list users | grep -q guest
-    rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf list users | grep -q user
+    ! rabbit_client list users | grep -q guest
+    rabbit_client list users | grep -q user
 }
