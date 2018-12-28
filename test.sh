@@ -10,6 +10,7 @@ docker run -it --rm --entrypoint "bash" "$IMG" \
       install-bats && \
       bats /tmp/test"
 
+./test-plugins.sh "$IMG" "$TAG"
 
 echo "#############"
 echo "# Tests OK! #"

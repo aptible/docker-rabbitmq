@@ -94,3 +94,17 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
     ! rabbit_client list users | grep -q guest
     rabbit_client list users | grep -q user
 }
+
+
+@test "It should have our default plugins enabled." {
+  start_rabbitmq
+  rabbitmq-plugins list rabbitmq_management | grep '\[E\*\]'
+  rabbitmq-plugins list rabbitmq_shovel | grep '\[E\*\]'
+  rabbitmq-plugins list rabbitmq_shovel_management | grep '\[E\*\]'
+}
+
+@test "It should allow enabling plugins." {
+  start_rabbitmq
+  rabbitmq-plugins enable rabbitmq_consistent_hash_exchange --online
+  rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep '\[E\*\]'
+}
