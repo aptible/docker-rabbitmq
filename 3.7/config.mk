@@ -1,10 +1,10 @@
 export MAJOR = 3
 export MINOR = 7
-export REVISION = 9
+export REVISION = 12
 
 export RABBITMQ_VERSION = $(MAJOR).$(MINOR).$(REVISION)
 export RABBITMQ_PLUGINS = $(MAJOR).$(MINOR).x
-export RABBITMQ_SHA1SUM = 2294a3feb9baf7c972006fbd256a3e69f272f36b
+export RABBITMQ_SHA1SUM = 10237724b83246f83da5bdd42ff8d5aaea21c782
 export ARCHIVE_FORMAT = xz
 export RABBITMQ_DOWNLOAD_URL = https://github.com/rabbitmq/rabbitmq-server/releases/download/v$(RABBITMQ_VERSION)/rabbitmq-server-generic-unix-$(RABBITMQ_VERSION).tar.$(ARCHIVE_FORMAT)
 
