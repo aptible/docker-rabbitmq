@@ -1,3 +1,5 @@
+export ALPINE_VERSION = 3.8
+
 export MAJOR = 3
 export MINOR = 7
 export REVISION = 12
