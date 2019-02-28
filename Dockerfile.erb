@@ -1,4 +1,4 @@
-FROM        alpine:3.8
+FROM        alpine:<%= ENV.fetch 'ALPINE_VERSION' %>
 
 ENV         TAG=<%= ENV.fetch 'TAG' %> \
             RABBITMQ_VERSION=<%= ENV.fetch 'RABBITMQ_VERSION' %> \
@@ -19,7 +19,7 @@ RUN         mkdir -p /srv && \
               -fsSL "<%= ENV.fetch 'RABBITMQ_DOWNLOAD_URL' %>" \
               -o "${ARCHIVE}" && \
             echo "<%= ENV.fetch 'RABBITMQ_SHA1SUM' %>  ${ARCHIVE}" | sha1sum -c - && \
-            apk add --no-cache --update  erlang erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
+            apk add --no-cache --update erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
                         erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap xz bash && \
             tar -xvf "$ARCHIVE" && \
             rm -f "${ARCHIVE}" && \

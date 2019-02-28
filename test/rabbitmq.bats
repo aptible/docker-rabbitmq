@@ -2,9 +2,26 @@
 
 source "${BATS_TEST_DIRNAME}/test_helpers.sh"
 
+@test "RabbitMQ should use working/supported erlang version." {
+
+  if [ "$TAG" = "3.5" ]; then
+    apk info erlang | grep "erlang-19.1"
+  elif [ "$TAG" = "3.7" ]; then
+    apk info erlang | grep "erlang-20.3"
+  fi
+}
+
 @test "It should bring up a working RabbitMQ instance" {
-    start_rabbitmq
-    rabbit_client list queues vhost name
+  # According to rabbitmqadmin
+  start_rabbitmq
+  rabbit_client list queues vhost name
+
+  # Bunny caught errors pertaining to invalid/unsupported erlang
+  # version, which simply testing with rabbitmqadmin did not.
+  gem install bunny || echo ok
+  gem list bunny | grep bunny
+
+  ruby /tmp/test/bunny.rb
 }
 
 @test "It should be able to declare an exchange" {
