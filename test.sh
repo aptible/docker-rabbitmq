@@ -10,6 +10,16 @@ docker run -it --rm --entrypoint "bash" "$IMG" \
       install-bats && \
       bats /tmp/test"
 
+TESTS=(
+  test-logging
+ )
+
+for t in "${TESTS[@]}"; do
+  echo "--- START ${t} ---"
+  "./${t}.sh" "$IMG"
+  echo "--- OK    ${t} ---"
+  echo
+done
 
 echo "#############"
 echo "# Tests OK! #"
