@@ -38,7 +38,7 @@ startup time.
 ## Available Versions (Tags)
 
 * `latest`: Currently RabbitMQ 3.7
-* `3.7`: RabbitMQ 3.7.13
+* `3.7`: RabbitMQ 3.7.14
 * `3.5`: RabbitMQ 3.5.7
 
 ## Tests
@@ -53,4 +53,4 @@ Images are built and pushed to Quay.io on every merge to master.
 
 MIT License, see [LICENSE](LICENSE.md) for details.
 
-Copyright (c) 2015 [Aptible](https://www.aptible.com) and contributors.
+Copyright (c) 2019 [Aptible](https://www.aptible.com) and contributors.
