@@ -92,6 +92,7 @@ bootstrap_configuration () {
   cat "/etc/rabbitmq.config.template" \
     | sed "s:__SSL_DIR__:${SSL_DIR}:g" \
     | sed "s:__BIND_HOST__:${bindHost}:g"\
+    | sed "s:__LOG_LEVEL__:${RABBIT_LOG_LEVEL:-info}:g"\
     > "${baseConfig}"
 
   # RabbitMQ wants us to have a .config at the end of the filename.
