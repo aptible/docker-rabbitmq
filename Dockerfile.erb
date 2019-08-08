@@ -7,9 +7,9 @@ ENV         TAG=<%= ENV.fetch 'TAG' %> \
             RABBITMQ_LOGS=- \
             RABBITMQ_SASL_LOGS=-
 ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
-            PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins
-ENV         RABBITMQ_ENABLED_PLUGINS_FILE=${DATA_DIRECTORY}/enabled_plugins \
-            PATH=$RABBITMQ_HOME/sbin:$PATH
+            PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
+            RABBITMQ_ENABLED_PLUGINS_FILE=${DATA_DIRECTORY}/enabled_plugins
+ENV         PATH=$RABBITMQ_HOME/sbin:$PATH
 
 RUN         mkdir -p /srv && \
             cd /srv && \
