@@ -56,13 +56,13 @@ echo "Waiting for DB"
 wait_for_rabbitmq
 
 echo "Testing for existing plugin"
-docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep '\[E\*\]' &> /dev/null
+docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep -F '[E*]' &> /dev/null
 
 echo "Enabling new plugin"
 docker exec -it "$DB_CONTAINER" rabbitmq-plugins enable rabbitmq_consistent_hash_exchange --online &> /dev/null
 
 echo "Testing for new plugin"
-docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep '\[E\*\]' &> /dev/null
+docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep -F '[E*]' &> /dev/null
 
 echo "Wiping out the database container"
 docker stop -t 10 "$DB_CONTAINER" &> /dev/null
@@ -78,9 +78,9 @@ echo "Waiting for DB"
 wait_for_rabbitmq
 
 echo "Testing for existing plugin"
-docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep '\[E\*\]' &> /dev/null
+docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep -F '[E*]' &> /dev/null
 
 echo "Testing for new plugin persistence"
-docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep '\[E\*\]' &> /dev/null
+docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep -F '[E*]' &> /dev/null
 
 echo "Done!"
