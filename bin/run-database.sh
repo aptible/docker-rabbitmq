@@ -108,6 +108,10 @@ bootstrap_configuration () {
 
 if [[ "$1" == "--initialize" ]]; then
     /usr/bin/initialize-certs
+
+    # Start with the default plugins, but persist them on the data volume
+    cp /tmp/enabled_plugins_template "${RABBITMQ_ENABLED_PLUGINS_FILE}"
+
     bootstrap_configuration "127.0.0.1"
 
     rabbitmq-server &

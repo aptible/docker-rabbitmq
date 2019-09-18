@@ -8,7 +8,7 @@ ENV         TAG=<%= ENV.fetch 'TAG' %> \
             RABBITMQ_SASL_LOGS=-
 ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
             PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
-            ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/enabled_plugins
+            RABBITMQ_ENABLED_PLUGINS_FILE=${DATA_DIRECTORY}/enabled_plugins
 ENV         PATH=$RABBITMQ_HOME/sbin:$PATH
 
 RUN         mkdir -p /srv && \
@@ -23,12 +23,12 @@ RUN         mkdir -p /srv && \
                         erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap xz bash && \
             tar -xvf "$ARCHIVE" && \
             rm -f "${ARCHIVE}" && \
-            touch "${RABBITMQ_HOME}/etc/rabbitmq/enabled_plugins" && \
+            mkdir "${DATA_DIRECTORY}" && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_management && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_shovel && \
             "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_shovel_management && \
-            apk del --purge tar gzip && \
-            mkdir "${DATA_DIRECTORY}"
+            cp ${RABBITMQ_ENABLED_PLUGINS_FILE} /tmp/enabled_plugins_template && \
+            apk del --purge tar gzip
 
 COPY        etc/openssl.cnf /ssl/testca/openssl.cnf
 COPY        etc/rabbitmq.config.template /etc/rabbitmq.config.template

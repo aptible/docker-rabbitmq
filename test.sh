@@ -12,11 +12,12 @@ docker run -it --rm --entrypoint "bash" "$IMG" \
 
 TESTS=(
   test-logging
+  test-plugins
  )
 
 for t in "${TESTS[@]}"; do
   echo "--- START ${t} ---"
-  "./${t}.sh" "$IMG"
+  "./${t}.sh" "$IMG" "$TAG"
   echo "--- OK    ${t} ---"
   echo
 done
