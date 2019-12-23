@@ -44,7 +44,8 @@ RUN         VERSION="<%= ENV.fetch 'DELAYED_MESSAGE_EXCHANGE_VERSION' %>" \
          && echo "<%= ENV.fetch 'DELAYED_MESSAGE_EXCHANGE_SHA1SUM' %>  ${DOWNLOAD}" | sha1sum -c - \
          && (unzip "${DOWNLOAD}" || mv "${DOWNLOAD}" "${DOWNLOAD}.ez") \
          && mv "${DOWNLOAD}.ez" "/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins/" \
-         && rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
+         && "${RABBITMQ_HOME}/sbin/rabbitmq-plugins" enable --offline rabbitmq_delayed_message_exchange \
+         && cp ${RABBITMQ_ENABLED_PLUGINS_FILE} /tmp/enabled_plugins_template
 
 RUN         ln -s /var/db/testca/cacert.pem /ssl/cacert.pem && \
             ln -s /var/db/server/cert.pem /ssl/cert.pem && \
