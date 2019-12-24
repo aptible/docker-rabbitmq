@@ -112,12 +112,14 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
     rabbit_client list users | grep -q user
 }
 
-
 @test "It should have our default plugins enabled." {
   start_rabbitmq
   rabbitmq-plugins list rabbitmq_management | grep -F '[E*]'
+  rabbitmq-plugins list rabbitmq_management_agent | grep -F '[e*]'
   rabbitmq-plugins list rabbitmq_shovel | grep -F '[E*]'
   rabbitmq-plugins list rabbitmq_shovel_management | grep -F '[E*]'
+  rabbitmq-plugins list rabbitmq_web_dispatch | grep -F '[e*]'
+  rabbitmq-plugins list rabbitmq_delayed_message_exchange | grep -F '[E*]'
 }
 
 @test "It should allow enabling plugins." {

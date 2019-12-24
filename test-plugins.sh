@@ -83,4 +83,22 @@ docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep
 echo "Testing for new plugin persistence"
 docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep -F '[E*]' &> /dev/null
 
+
+echo "Test for ability to migrate from old image to new."
+docker exec -it "$DB_CONTAINER" rm /var/db/enabled_plugins
+echo "Wiping out the database container"
+docker stop -t 10 "$DB_CONTAINER" &> /dev/null
+sleep 10
+
+echo "Starting DB again with the persistent volume"
+docker run -d --rm  --name="${DB_CONTAINER}" \
+  --volumes-from "$DATA_CONTAINER" -h aptible \
+  "${IMG}" &> /dev/null
+
+echo "Waiting for DB"
+wait_for_rabbitmq
+
+echo "Testing for existing plugin"
+docker exec -it "$DB_CONTAINER" rabbitmq-plugins list rabbitmq_management | grep -F '[E*]' &> /dev/null
+
 echo "Done!"
