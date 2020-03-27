@@ -9,7 +9,8 @@
      {verify, verify_peer},
      {fail_if_no_peer_cert, false}
     ]},
-   {loopback_users, []}
+   {loopback_users, []},
+   {disk_free_limit, __APTIBLE_CONTAINER_SIZE__}
   ]},
  {rabbitmq_management,
   [{listener,

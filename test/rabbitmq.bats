@@ -127,3 +127,8 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
   rabbitmq-plugins enable rabbitmq_consistent_hash_exchange --online
   rabbitmq-plugins list rabbitmq_consistent_hash_exchange | grep -F '[E*]'
 }
+
+@test "It should set the disk free space limit based upon the container size" {
+    APTIBLE_CONTAINER_SIZE=2048 start_rabbitmq &> /tmp/rabbit.log
+    grep "Disk free limit set to 2048MB" /tmp/rabbit.log
+}

@@ -88,11 +88,16 @@ bootstrap_configuration () {
   local baseConfig
   baseConfig="$(mktemp)"
 
+  if [[ -n "${APTIBLE_CONTAINER_SIZE}" ]]; then
+    CONTAINER_RAM_KBYTES=$(( APTIBLE_CONTAINER_SIZE*1000*1000 ))
+  fi
+
   # shellcheck disable=SC2002
   cat "/etc/rabbitmq.config.template" \
     | sed "s:__SSL_DIR__:${SSL_DIR}:g" \
     | sed "s:__BIND_HOST__:${bindHost}:g"\
     | sed "s:__LOG_LEVEL__:${RABBIT_LOG_LEVEL:-info}:g"\
+    | sed "s:__APTIBLE_CONTAINER_SIZE__:${CONTAINER_RAM_KBYTES:-256000000}:g"\
     > "${baseConfig}"
 
   # RabbitMQ wants us to have a .config at the end of the filename.
