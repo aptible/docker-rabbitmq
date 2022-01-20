@@ -6,8 +6,8 @@ services:
 
 env:
   matrix:
-#     - TAG=3.5  # removed in __
-#     - TAG=3.7  # removed in __
+#     - TAG=3.5  # removed because no longer buildable since EOL of https://dl.bintray.com/rabbitmq/community-plugins/
+#     - TAG=3.7  # removed because no longer buildable since EOL of https://dl.bintray.com/rabbitmq/community-plugins/
     - TAG=3.9
 
 script:
