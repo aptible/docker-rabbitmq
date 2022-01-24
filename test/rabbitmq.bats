@@ -93,7 +93,7 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
 }
 
 @test "It generates valid JSON for --discover" {
-  wrapper --discover | python -c 'import sys, json; json.load(sys.stdin)'
+  wrapper --discover | python3 -c 'import sys, json; json.load(sys.stdin)'
 }
 
 @test "It generates valid JSON for --connection-url" {
@@ -103,7 +103,7 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
   EXPOSE_PORT_5671=123 \
   EXPOSE_PORT_15671=456 \
   DATABASE=db \
-    wrapper --connection-url | python -c 'import sys, json; json.load(sys.stdin)'
+    wrapper --connection-url | python3 -c 'import sys, json; json.load(sys.stdin)'
 }
 
 @test "It should delete the guest user and create a user" {

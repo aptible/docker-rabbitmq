@@ -9,6 +9,8 @@ rabbit_client(){
     rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf "$@"
   elif [[ "$TAG" == "3.7" ]]; then
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.9" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
   fi
 }
 

@@ -7,7 +7,8 @@
      {keyfile, "__SSL_DIR__/key.pem"},
      {cacertfile, "__SSL_DIR__/cacert.pem"},
      {verify, verify_peer},
-     {fail_if_no_peer_cert, false}
+     {fail_if_no_peer_cert, false},
+     {versions, ['tlsv1.3', 'tlsv1.2', 'tlsv1.1', 'tlsv1']}
     ]},
    {loopback_users, []},
    {disk_free_limit, __APTIBLE_CONTAINER_SIZE__}
