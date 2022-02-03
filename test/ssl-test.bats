@@ -7,22 +7,22 @@ local_s_client() {
   openssl s_client -connect localhost:15671 "$@" < /dev/null
 }
 
-@test "It should allow connections" {
+@test "It should allow connections using TLS 1.2" {
   start_rabbitmq
 
-  local_s_client
+  local_s_client -tls1_2
 }
 
-@test "It should allow connections using either TLS 1.2 or TLS 1.3" {
+@test "It should allow connections using TLS 1.1" {
   start_rabbitmq
 
-  local_s_client -no_ssl3 -no_tls1 -no_tls1_1
+  local_s_client -tls1_1
 }
 
-@test "It should disallow connections using TLS1.1 or earlier" {
+@test "It should allow connections using TLS 1.0" {
   start_rabbitmq
 
-  ! local_s_client -no_tls1_3 -no_tls1_2
+  local_s_client -tls1
 }
 
 @test "It should disallow connections using SSLv3" {
