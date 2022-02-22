@@ -29,7 +29,7 @@ function wait_for_db {
 }
 
 function configure_test {
-  docker exec "$DB_CONTAINER" apk add --update ruby >/dev/null 
+  docker exec "$DB_CONTAINER" apk add --update ruby-dev build-base >/dev/null
   docker exec "$DB_CONTAINER" gem install bunny &>/dev/null || true
   docker exec "$DB_CONTAINER" gem list bunny | grep -q bunny
 }

@@ -7,7 +7,7 @@ TAG="$2"
 
 if [[ "$TAG" == "3.5" ]]; then
   ADMIN_CMD="rabbitmqadmin -c /usr/local/bin/rabbitmqadmin.conf"
-elif [[ "$TAG" == "3.7" ]]; then
+else
   ADMIN_CMD="rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf"
 fi
 
@@ -22,7 +22,7 @@ function cleanup {
 }
 
 wait_for_rabbitmq() {
-  docker exec -it "$DB_CONTAINER" apk add --update python &>/dev/null
+  docker exec -it "$DB_CONTAINER" apk add --update python3 &>/dev/null
   for _ in $(seq 1 60); do
     if docker exec -it "$DB_CONTAINER" $ADMIN_CMD list users &>/dev/null; then
       return 0
