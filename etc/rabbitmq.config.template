@@ -1,6 +1,5 @@
 [{rabbit,
-  [{log_levels, [{connection, __LOG_LEVEL__}, {channel, __LOG_LEVEL__}]},
-  {tcp_listeners, []},
+  [{tcp_listeners, []},
    {ssl_listeners, [{"__BIND_HOST__", 5671}]},
    {ssl_options,
     [{certfile, "__SSL_DIR__/cert.pem"},
@@ -10,7 +9,11 @@
      {fail_if_no_peer_cert, false}
     ]},
    {loopback_users, []},
-   {disk_free_limit, __APTIBLE_CONTAINER_SIZE__}
+   {disk_free_limit, __APTIBLE_CONTAINER_SIZE__},
+   {log, [{categories,
+    [{connection, [{level, __LOG_LEVEL__}]},
+     {channel, [{level, __LOG_LEVEL__}]}]
+   }]}
   ]},
  {rabbitmq_management,
   [{listener,

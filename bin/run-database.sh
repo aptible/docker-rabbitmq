@@ -8,7 +8,7 @@ with_retry () {
   # new user because no worker is available to service our request (the error
   # looks like `noproc,{gen_server2,call ...}`). Even if we wait until RabbitMQ
   # appears to be online (i.e. it shows in rabbitmqctl's status output), we can
-  # stil run into an error while adding the user. So, we just retry a lot!
+  # still run into an error while adding the user. So, we just retry a lot!
   local n=30
   local d=2
 

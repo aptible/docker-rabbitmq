@@ -14,3 +14,5 @@ export PLUGIN_FORMAT = zip
 export DELAYED_MESSAGE_EXCHANGE_VERSION = 20171201-$(RABBITMQ_PLUGINS)
 export DELAYED_MESSAGE_EXCHANGE_SHA1SUM = b878e3f5bcd80e90e73d01f672f9ead022141275
 export DELAYED_MESSAGE_PLUGIN_DOWNLOAD = https://dl.bintray.com/rabbitmq/community-plugins/$(RABBITMQ_PLUGINS)/rabbitmq_delayed_message_exchange/rabbitmq_delayed_message_exchange-$(DELAYED_MESSAGE_EXCHANGE_VERSION).$(PLUGIN_FORMAT)
+
+export ERLANG_APK_PACKAGES="erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap"

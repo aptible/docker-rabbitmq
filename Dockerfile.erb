@@ -19,8 +19,7 @@ RUN         mkdir -p /srv && \
               -fsSL "<%= ENV.fetch 'RABBITMQ_DOWNLOAD_URL' %>" \
               -o "${ARCHIVE}" && \
             echo "<%= ENV.fetch 'RABBITMQ_SHA1SUM' %>  ${ARCHIVE}" | sha1sum -c - && \
-            apk add --no-cache --update erlang erlang-mnesia erlang-public-key erlang-crypto erlang-ssl \
-                        erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap xz bash && \
+            apk add --no-cache --update <%= ENV.fetch 'ERLANG_APK_PACKAGES' %> xz bash && \
             tar -xvf "$ARCHIVE" && \
             rm -f "${ARCHIVE}" && \
             mkdir "${DATA_DIRECTORY}" && \

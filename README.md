@@ -37,9 +37,10 @@ startup time.
 
 ## Available Versions (Tags)
 
-* `latest`: Currently RabbitMQ 3.7
-* `3.7`: RabbitMQ 3.7.15
-* `3.5`: RabbitMQ 3.5.7
+* `latest`: Currently RabbitMQ 3.9
+* `3.9`: RabbitMQ 3.9.12
+* `3.7`: RabbitMQ 3.7.15 (End of life, no new versions will be published)
+* `3.5`: RabbitMQ 3.5.7 (End of life, no new versions will be published)
 
 ## Tests
 
