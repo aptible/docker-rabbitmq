@@ -11,6 +11,10 @@ rabbit_client(){
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
   elif [[ "$TAG" == "3.9" ]]; then
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.11" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.12" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
   else
     # We should explicitly handle tags as above, but for new tags try to start rather than skip
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
