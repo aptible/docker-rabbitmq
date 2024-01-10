@@ -124,7 +124,7 @@ if [[ "$1" == "--initialize" ]]; then
 
     rabbitmq-server &
     rmq_pid="$!"
-
+    with_retry rabbitmqctl start_app
     with_retry add_user_if_not_exists "$USERNAME" "$PASSPHRASE"
     with_retry add_vhost_if_not_exists "$DATABASE"
     with_retry delete_user_if_exists "guest"
