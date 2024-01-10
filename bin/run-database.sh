@@ -122,9 +122,8 @@ if [[ "$1" == "--initialize" ]]; then
 
     bootstrap_configuration "127.0.0.1"
 
-    rabbitmq-server &
+    rabbitmq-server & rabbitmqctl start_app & 
     rmq_pid="$!"
-    with_retry rabbitmqctl start_app
     with_retry add_user_if_not_exists "$USERNAME" "$PASSPHRASE"
     with_retry add_vhost_if_not_exists "$DATABASE"
     with_retry delete_user_if_exists "guest"
