@@ -9,7 +9,7 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
   elif [ "$TAG" = "3.7" ]; then
     apk info erlang | grep "erlang-20.3"
   elif [ "$TAG" = "3.9" ]; then
-    apk info erlang | grep "erlang-25.2"
+    apk info erlang | grep "erlang-25.1"
   elif [ "$TAG" = "3.10" ]; then
     apk info erlang | grep "erlang-25.3"
   elif [ "$TAG" = "3.11" ]; then

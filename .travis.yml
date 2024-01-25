@@ -6,7 +6,6 @@ services:
 
 env:
   matrix:
-    - TAG=3.7
     - TAG=3.9
     - TAG=3.10
     - TAG=3.11
