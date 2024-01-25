@@ -27,7 +27,7 @@ wait_for_rabbitmq() {
     if docker exec -it "$DB_CONTAINER" $ADMIN_CMD list users &>/dev/null; then
       return 0
     fi
-    sleep 1
+    sleep 2
   done
 
   echo "RabbitMQ did not come online!"

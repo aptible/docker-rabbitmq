@@ -398,7 +398,7 @@ def make_parser():
     add("--ssl-disable-hostname-verification", dest="ssl_disable_hostname_verification",
         help="Disables peer hostname verification", action="store_true")
     add("-k", "--ssl-insecure", dest="ssl_insecure",
-        help="Disables all SSL validations like curl's '-k' argument", default=False, action="store_true")
+        help="Disables all SSL validations like curl's '-k' argument", action="store_true")
     add("-t", "--request-timeout", dest="request_timeout",
         help="HTTP request timeout in seconds", type="int")
     add("-f", "--format", dest="format",

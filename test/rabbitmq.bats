@@ -8,8 +8,12 @@ source "${BATS_TEST_DIRNAME}/test_helpers.sh"
     apk info erlang | grep "erlang-19.1"
   elif [ "$TAG" = "3.7" ]; then
     apk info erlang | grep "erlang-20.3"
+  elif [ "$TAG" = "3.9" ]; then
+    apk info erlang | grep "erlang-25.2"
+  elif [ "$TAG" = "3.10" ]; then
+    apk info erlang | grep "erlang-25.3"
   elif [ "$TAG" = "3.11" ]; then
-    apk info erlang | grep "erlang-26.2.1"
+    apk info erlang | grep "erlang-25.3"
   elif [ "$TAG" = "3.12" ]; then
     apk info erlang | grep "erlang-26.2.1"
   fi

@@ -1,4 +1,7 @@
-[{rabbit,
+[
+  {ssl, [{versions, 
+  ['tlsv1.3', 'tlsv1.2', 'tlsv1.1']}]},
+  {rabbit,
   [{tcp_listeners, []},
    {ssl_listeners, [{"__BIND_HOST__", 5671}]},
    {ssl_options,
@@ -6,7 +9,8 @@
      {keyfile, "__SSL_DIR__/key.pem"},
      {cacertfile, "__SSL_DIR__/cacert.pem"},
      {verify, verify_peer},
-     {fail_if_no_peer_cert, false}
+     {fail_if_no_peer_cert, false},
+     {versions, ['tlsv1.3', 'tlsv1.2', 'tlsv1.1']}
     ]},
    {loopback_users, []},
    {disk_free_limit, __APTIBLE_CONTAINER_SIZE__},
@@ -15,7 +19,7 @@
      {channel, [{level, __LOG_LEVEL__}]}]
    }]}
   ]},
- {rabbitmq_management,
+  {rabbitmq_management,
   [{listener,
     [{ip, "__BIND_HOST__"},
      {port, 15671},
@@ -25,7 +29,8 @@
        {keyfile, "__SSL_DIR__/key.pem"},
        {cacertfile, "__SSL_DIR__/cacert.pem"},
        {verify, verify_peer},
-       {fail_if_no_peer_cert, false}
+       {fail_if_no_peer_cert, false},
+       {versions, ['tlsv1.3', 'tlsv1.2', 'tlsv1.1']}
       ]}
     ]}
   ]}
