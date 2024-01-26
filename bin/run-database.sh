@@ -122,7 +122,7 @@ if [[ "$1" == "--initialize" ]]; then
 
     bootstrap_configuration "127.0.0.1"
 
-    rabbitmq-server &
+    rabbitmq-server & rabbitmqctl start_app &
     rmq_pid="$!"
     # potentially need to wait for the server to start running rabbit
     sleep 10
