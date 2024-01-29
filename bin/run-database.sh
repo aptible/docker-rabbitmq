@@ -122,7 +122,7 @@ if [[ "$1" == "--initialize" ]]; then
 
     bootstrap_configuration "127.0.0.1"
 
-    rabbitmq-server & rabbitmqctl start_app &
+    rabbitmq-server &
     rmq_pid="$!"
     # potentially need to wait for the server to start running rabbit
     sleep 10
@@ -133,6 +133,8 @@ if [[ "$1" == "--initialize" ]]; then
     with_retry rabbitmqctl set_permissions -p "$DATABASE" "$USERNAME" ".*" ".*" ".*"
     with_retry rabbitmqctl set_user_tags "$USERNAME" "administrator"
 
+    echo "Listing users"
+    with_retry rabbitmqctl list_users
     echo "Waiting for RabbitMQ to exit..."
     pkill -TERM -P "$rmq_pid"
     wait "$rmq_pid" || true
