@@ -20,18 +20,24 @@ local_s_client() {
 }
 
 @test "It should not allow connections using TLS 1.1" {
+  if [ !version_check ]; then
+      skip "RabbitMQ version 3.9 and lower allows TLS 1.1"
+  fi
   start_rabbitmq
 
   ! local_s_client -tls1_1
 }
 
 @test "It should not allow connections using TLS 1.0" {
+  if [ !version_check ]; then
+      skip "RabbitMQ version 3.9 and lower allows TLS 1.0"
+  fi
   start_rabbitmq
 
   ! local_s_client -tls1
 }
 
-@test "It should disallow connections using SSLv3" {
+@test "It should not allow connections using SSLv3" {
   start_rabbitmq
 
   ! local_s_client -ssl3

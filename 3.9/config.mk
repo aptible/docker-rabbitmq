@@ -1,4 +1,4 @@
-export ALPINE_VERSION = 3.17
+export ALPINE_VERSION = 3.16
 
 export MAJOR = 3
 export MINOR = 9
