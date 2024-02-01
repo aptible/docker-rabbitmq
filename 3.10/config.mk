@@ -2,11 +2,11 @@ export ALPINE_VERSION = 3.18
 
 export MAJOR = 3
 export MINOR = 10
-export REVISION = 7
+export REVISION = 25
 
 export RABBITMQ_VERSION = $(MAJOR).$(MINOR).$(REVISION)
 export RABBITMQ_PLUGINS = $(MAJOR).$(MINOR).x
-export RABBITMQ_SHA1SUM = 9d53589bb078f9a410543d9f73b72d6ce2b6274f
+export RABBITMQ_SHA1SUM = 563926d880a8ba2d5bc16b74a06dfdd9d4177e13
 export ARCHIVE_FORMAT = xz
 export RABBITMQ_DOWNLOAD_URL = https://github.com/rabbitmq/rabbitmq-server/releases/download/v$(RABBITMQ_VERSION)/rabbitmq-server-generic-unix-$(RABBITMQ_VERSION).tar.$(ARCHIVE_FORMAT)
 
