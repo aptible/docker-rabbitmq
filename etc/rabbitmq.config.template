@@ -1,4 +1,5 @@
-[{rabbit,
+[
+  {rabbit,
   [{tcp_listeners, []},
    {ssl_listeners, [{"__BIND_HOST__", 5671}]},
    {ssl_options,
@@ -15,7 +16,7 @@
      {channel, [{level, __LOG_LEVEL__}]}]
    }]}
   ]},
- {rabbitmq_management,
+  {rabbitmq_management,
   [{listener,
     [{ip, "__BIND_HOST__"},
      {port, 15671},

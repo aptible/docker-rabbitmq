@@ -1,5 +1,23 @@
 #!/bin/bash
 
+version_check(){
+  if [[ "$TAG" == "3.5" ]]; then
+    return 0
+  elif [[ "$TAG" == "3.7" ]]; then
+    return 0
+  elif [[ "$TAG" == "3.9" ]]; then
+    return 0
+  elif [[ "$TAG" == "3.10" ]]; then
+    return 1
+  elif [[ "$TAG" == "3.11" ]]; then
+    return 1
+  elif [[ "$TAG" == "3.12" ]]; then
+    return 1
+  else
+    # assume it's something newer
+    return 1
+  fi
+}
 rabbit_client(){
   # Rabbitmqadmin 3.5 contains a patch to handle the self signed SSL, see here :
   # https://github.com/aptible/docker-rabbitmq/commit/0fb8a57a3206a15e340ad9a33b6f93ef18cb2f49
@@ -10,6 +28,10 @@ rabbit_client(){
   elif [[ "$TAG" == "3.7" ]]; then
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
   elif [[ "$TAG" == "3.9" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.11" ]]; then
+    rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
+  elif [[ "$TAG" == "3.12" ]]; then
     rabbitmqadmin --ssl-insecure -c /usr/local/bin/rabbitmqadmin.conf "$@"
   else
     # We should explicitly handle tags as above, but for new tags try to start rather than skip

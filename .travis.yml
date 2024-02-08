@@ -7,6 +7,9 @@ services:
 env:
   matrix:
     - TAG=3.9
+    - TAG=3.10
+    - TAG=3.11
+    - TAG=3.12
 
 script:
   - make build

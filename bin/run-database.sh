@@ -124,7 +124,6 @@ if [[ "$1" == "--initialize" ]]; then
 
     rabbitmq-server &
     rmq_pid="$!"
-
     with_retry add_user_if_not_exists "$USERNAME" "$PASSPHRASE"
     with_retry add_vhost_if_not_exists "$DATABASE"
     with_retry delete_user_if_exists "guest"
@@ -132,6 +131,8 @@ if [[ "$1" == "--initialize" ]]; then
     with_retry rabbitmqctl set_permissions -p "$DATABASE" "$USERNAME" ".*" ".*" ".*"
     with_retry rabbitmqctl set_user_tags "$USERNAME" "administrator"
 
+    echo "Listing users"
+    with_retry rabbitmqctl list_users
     echo "Waiting for RabbitMQ to exit..."
     pkill -TERM -P "$rmq_pid"
     wait "$rmq_pid" || true
